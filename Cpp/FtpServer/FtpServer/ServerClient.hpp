@@ -18,11 +18,11 @@ public:
     ~ServerClient();
     bool isAlive();
     bool CreateSocket();
-    int Bind();
-    int Listen();
-    int Accpet();
-    int Response();
-    int Exit();
+    void threeTimesHandShaking();
+    static int Bind(int &sockfd, struct sockaddr* addr);
+    static int Listen(int &sockfd, struct sockaddr* addr);
+    static int Accpet(int &sockfd, struct sockaddr* addr);
+    static int Exit() = 0;
 };
 
 #endif // !_SERVERCLIENT_HPP_
