@@ -9,20 +9,26 @@ class ServerClient :
 {
 private:
     struct sockaddr* addr;
-    int socket_fd;
     bool alive = false;
-    int ID = 0;
+    int socket_fd;
+    int ID = 1;
+    static socklen_t socklen;
 public:
     ServerClient();
     ServerClient(struct sockaddr* addr, int ID);
     ~ServerClient();
     bool isAlive();
+    //bool CreateSocket(int sockfd, struct sockaddr* addr);
     bool CreateSocket();
     void threeTimesHandShaking();
-    static int Bind(int &sockfd, struct sockaddr* addr);
-    static int Listen(int &sockfd, struct sockaddr* addr);
-    static int Accpet(int &sockfd, struct sockaddr* addr);
-    static int Exit() = 0;
+    int recvFromCli();
+    int sendData(std::string str);
+
+    bool Bind();
+    bool Listen();
+    int Accept();
+    bool Exit();
+
 };
 
 #endif // !_SERVERCLIENT_HPP_

@@ -67,33 +67,19 @@ int main(int argc, char *argv[]){
             }
         }
     }
-    if (bind(server_sockfd, (struct sockaddr *)&servAddr,) < 0)
-    {
-        perror("Bind Error");
-        exit(-1);
-    }
-
-    if (listen(server_sockfd, 5) < 0)
-    {
-        perror("Listen Error");
-        exit(-1);
-    }
     /**
      * Concurrency required in future.
      * Multi-thread -> Thread pool -> Multiplexing(epoll, reactor)
      */
-    if ((clint_sockfd = accept(server_sockfd, (struct sockaddr *)&servAddr, sizeof(servAddr))) < 0)
-    {
-        perror("ACK Error")；
-        exit(-1);
-    }
-    
     ServerInterface* server = new ServerClient((struct sockaddr *)&servAddr, serverID);
     /*
      * TODO: Single thread solution
      */
+    server->Listen();
     while (server->isAlive() == true)
-        ;
+    {
+        server->Accept();
+    }
     delete[] server;
 
     return 0;
