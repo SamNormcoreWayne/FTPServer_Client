@@ -1,17 +1,18 @@
 #pragma once
-#ifndef _SERVERCLIENT_HPP_
-#define _SERVERCLIENT_HPP_
+#ifndef __SERVERCLIENT_HPP__
+#define __SERVERCLIENT_HPP__
 #include "ServerInterface.hpp"
-
+#include "ServerFuncInterface.hpp"
 
 class ServerClient :
-    public ServerInterface
+    public ServerInterface, public ServerFuncInterface
 {
 private:
     struct sockaddr* addr;
     bool alive = false;
     int socket_fd;
     int ID = 1;
+    std::string mode = "";
     static socklen_t socklen;
 public:
     ServerClient();
@@ -24,12 +25,14 @@ public:
     int Accept();
     bool ServerMain();
 
+    static std::vector<std::string> StringParser(const std::string str);
+
 protected:
     bool Bind();
     bool Exit();
-
     int recvFromCli();
     int sendData(std::string str);
+
 };
 
-#endif // !_SERVERCLIENT_HPP_
+#endif // !__SERVERCLIENT_HPP__

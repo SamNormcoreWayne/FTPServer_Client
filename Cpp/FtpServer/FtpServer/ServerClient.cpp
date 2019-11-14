@@ -87,5 +87,102 @@ bool ServerClient::ServerMain()
     /**
      * Do something here.
      */
-    enum command {help, ls, cd, }
+    enum command {help, ls, cd, port, pasv, get, put, bye};
+    std::string in_commd;
+    std::vector<std::string> in;
+    while(true)
+    {
+        std::cin >> in_commd;
+        if (in.size() == 0)
+        {
+            continue;
+        }
+        if (in.size() >= 3)
+        {
+            std::cout << "Illegal input. Try \"help\"." << std::endl;
+            std::cout.flush();
+            continue;
+        }
+        if (in[0] == "help")
+        {
+            /**
+             * some helps here
+             */
+            continue;
+        }
+        if (in[0] == "ls")
+        {
+            this->list(in);
+            continue;
+        }
+        if (in[0] == "cd")
+        {
+            this->cd(in);
+            continue;
+        }
+        if (in[0] == "port")
+        {
+            this->port();
+            continue;
+        }
+        if (in[0] == "pasv")
+        {
+            this->pasv();
+            continue;
+        }
+        if (in[0] == "get")
+        {
+            this->get(in);
+            /**
+             * get could be a async method
+             */
+            continue;
+        }
+        if (in[0] == "put")
+        {
+            if(this->mode == "")
+            {
+                std::cout << "Setup mode first. Try \"pasv\" or \"port\"" << std::endl;
+                continue;
+            }
+            this->put(in);
+            /**
+             * put could be a async method
+             */
+            continue;
+        }
+        if (in[0] == "bye")
+        {
+            this->Exit();
+        }
+        std::cout << "Bad input. Try \"help\"." << std::endl;
+    }
+}
+
+std::vector<std::string> ServerClient::StringParser(const std::string str)
+{
+    /**
+     * Test required.
+     */
+    int j = 0;
+    std::vector<std::string> tmp;
+    for (int i = 0; i < str.size(); ++i)
+    {
+        if (str.size() == 1)
+        {
+            tmp.push_back(str);
+            break;
+        }
+        if (str[i] == ' ')
+        {
+            if (i - j == 0)
+            {
+                j = i + 1;
+                continue;
+            }
+            tmp.push_back(str.substr(j, i - j));
+        }
+        j = i + 1;
+    }
+    return tmp;
 }
