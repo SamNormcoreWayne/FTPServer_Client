@@ -269,3 +269,4 @@ __pycache__/
 **/*.vcxproj
 **/*.vcxproj.user
 **/readme
+**/*.vcxproj.filters
