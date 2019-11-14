@@ -17,14 +17,15 @@ public:
     ServerClient();
     ServerClient(struct sockaddr* addr, int ID);
     ~ServerClient();
-    bool isAlive();
     //bool CreateSocket(int sockfd, struct sockaddr* addr);
     bool CreateSocket();
-    void threeTimesHandShaking();
-    bool ServerMain();
-    bool Bind();
+    bool isAlive();
     bool Listen();
     int Accept();
+    bool ServerMain();
+
+protected:
+    bool Bind();
     bool Exit();
 
     int recvFromCli();

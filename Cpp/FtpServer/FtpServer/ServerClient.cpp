@@ -81,3 +81,11 @@ int ServerClient::Accept()
     }
     return client_fd;
 }
+
+bool ServerClient::ServerMain()
+{
+    /**
+     * Do something here.
+     */
+    enum command {help, ls, cd, }
+}
