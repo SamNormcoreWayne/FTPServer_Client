@@ -21,14 +21,14 @@ public:
     //bool CreateSocket(int sockfd, struct sockaddr* addr);
     bool CreateSocket();
     void threeTimesHandShaking();
-    int recvFromCli();
-    int sendData(std::string str);
-
+    bool ServerMain();
     bool Bind();
     bool Listen();
     int Accept();
     bool Exit();
 
+    int recvFromCli();
+    int sendData(std::string str);
 };
 
 #endif // !_SERVERCLIENT_HPP_

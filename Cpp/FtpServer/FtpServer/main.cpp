@@ -79,8 +79,11 @@ int main(int argc, char *argv[]){
     while (server->isAlive() == true)
     {
         server->Accept();
+        /**
+         * Deal with requests.
+         */
+        server->ServerMain();
     }
-    delete[] server;
 
     return 0;
 }

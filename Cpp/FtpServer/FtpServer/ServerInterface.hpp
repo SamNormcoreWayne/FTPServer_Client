@@ -11,9 +11,8 @@ public:
     ServerInterface() {}
     virtual ~ServerInterface() = 0;
     virtual bool CreateSocket() = 0;
-    virtual int recvFromCli() = 0;
-    virtual int sendData(std::string str) = 0;
     virtual bool isAlive() = 0;
     virtual bool Listen() = 0;
     virtual int Accept() = 0;
+    virtual bool ServerMain() = 0;
 };
