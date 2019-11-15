@@ -1,6 +1,7 @@
 ## This is a repo for FTP
 
-### Java Version
-- Package and deployed by Marven
-- Java 8
-- Did not resolve problems that might cause during concurrent situations.
+### CPP
+
+* main.cpp: Main function
+* ServerClient: The class of server side client
+* ServerFunc: the operations of FTP e.g. cd, ls, pasv, port, etc.
