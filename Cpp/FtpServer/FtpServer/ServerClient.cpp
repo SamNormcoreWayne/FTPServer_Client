@@ -1,6 +1,9 @@
 #include "ServerClient.hpp"
+#include <fstream>
+#include <experimental/filesystem>
 
 constexpr auto LOCAL_HOST = "127.0.0.1";
+namespace fs = std::experimental::filesystem;
 
 ServerClient::ServerClient()
 {
@@ -26,7 +29,6 @@ ServerClient::ServerClient(struct sockaddr* addr, int ID)
     if (!this->CreateSocket())
         this->Exit();
 }
-
 
 ServerClient::~ServerClient()
 {
@@ -120,6 +122,11 @@ bool ServerClient::ServerMain()
             this->cd(in);
             continue;
         }
+        if (in[0] == "pwd")
+        {
+            this->pwd();
+            continue;
+        }
         if (in[0] == "port")
         {
             this->port();
@@ -185,4 +192,17 @@ std::vector<std::string> ServerClient::StringParser(const std::string str)
         j = i + 1;
     }
     return tmp;
+}
+
+// ServerFuncImplementation
+
+void ServerClient::list(std::vector<std::string>)
+{
+    std::ofstream out;
+    std::ifstream in;
+}
+
+void ServerClient::pwd()
+{
+    std::cout << this->dir.string() << std::endl;
 }

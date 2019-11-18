@@ -14,6 +14,7 @@ public:
     virtual void cd(std::vector<std::string>) = 0;
     virtual void get(std::vector<std::string>) = 0;
     virtual void put(std::vector<std::string>) = 0;
+    virtual void pwd() = 0;
     virtual void port() = 0;
     virtual void pasv() = 0;
 };

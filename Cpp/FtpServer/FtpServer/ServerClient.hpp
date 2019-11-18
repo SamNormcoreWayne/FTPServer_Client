@@ -4,6 +4,10 @@
 #include "ServerInterface.hpp"
 #include "ServerFuncInterface.hpp"
 
+#include <experimental/filesystem>
+
+namespace fs = std::experimental::filesystem;
+
 class ServerClient :
     public ServerInterface, public ServerFuncInterface
 {
@@ -13,6 +17,7 @@ private:
     int socket_fd;
     int ID = 1;
     std::string mode = "";
+    fs::path dir = fs::path("/home");
     static socklen_t socklen;
 public:
     ServerClient();
@@ -25,6 +30,14 @@ public:
     int Accept();
     bool ServerMain();
 
+    // Implementation of SererFuncInterface
+    void list(std::vector<std::string>);
+    void cd(std::vector<std::string>);
+    void get(std::vector<std::string>);
+    void put(std::vector<std::string>);
+    void pwd();
+    void port();
+    void pasv();
     static std::vector<std::string> StringParser(const std::string str);
 
 protected:
