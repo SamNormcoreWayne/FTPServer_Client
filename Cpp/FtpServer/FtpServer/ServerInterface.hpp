@@ -20,6 +20,7 @@ public:
     virtual bool Listen() = 0;
     virtual int Accept() = 0;
     virtual bool ServerMain() = 0;
+    virtual void operator() () = 0;
 };
 
 #endif // !__SERVERINTERFACE_HPP__

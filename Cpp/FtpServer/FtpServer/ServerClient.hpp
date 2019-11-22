@@ -75,7 +75,7 @@ protected:
     bool Exit();
     int recvFromCli();
     int sendData(std::string str);
-
+    void operator() ();
 };
 
 #endif // !__SERVERCLIENT_HPP__

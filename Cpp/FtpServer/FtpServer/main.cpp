@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <thread>
 #include "ServerInterface.hpp"
 #include "ServerClient.hpp"
 
@@ -82,7 +83,7 @@ int main(int argc, char *argv[]){
         /**
          * Deal with requests.
          */
-        server->ServerMain();
+        std::thread thread_obj(server->ServerMain);
     }
 
     return 0;
