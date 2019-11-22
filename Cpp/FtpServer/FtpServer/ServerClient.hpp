@@ -4,9 +4,30 @@
 #include "ServerInterface.hpp"
 #include "ServerFuncInterface.hpp"
 
-#include <experimental/filesystem>
+#include <fstream>
 
-namespace fs = std::experimental::filesystem;
+#ifdef WINDOWS
+#   include <direct.h>
+#   define GetCurrentDir _getcwd
+#else
+#   include <unistd.h>
+#   include <dirent.h>
+#   define GetCurrentDir _getcwd
+#endif
+
+#ifdef __has_include
+#   if __has_include(<experimental/filesystem>)
+#       include <experimental/filesystem>
+#       define have_filesystem 1
+        namespace fs = std::experimental::filesystem;
+#   elif __has_include(<filesystem>)
+#       include <filesystem>
+#       define have_filesystem 1
+        namespace fs = std::filesystem;
+#   else
+#       define have_filesystem 0
+#   endif
+#endif
 
 class ServerClient :
     public ServerInterface, public ServerFuncInterface
@@ -17,7 +38,16 @@ private:
     int socket_fd;
     int ID = 1;
     std::string mode = "";
+#if have_filesystem == 1
     fs::path dir = fs::path("/home");
+#else
+    char dir[FILENAME_MAX];
+    if (!GetCurrentDir(dir, sizeof(FILENAME_MAX)))
+    {
+        this->Exit();
+        exit(-1);
+    }
+#endif
     static socklen_t socklen;
 public:
     ServerClient();

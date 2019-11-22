@@ -1,9 +1,6 @@
 #include "ServerClient.hpp"
-#include <fstream>
-#include <experimental/filesystem>
 
 constexpr auto LOCAL_HOST = "127.0.0.1";
-namespace fs = std::experimental::filesystem;
 
 ServerClient::ServerClient()
 {
@@ -198,11 +195,72 @@ std::vector<std::string> ServerClient::StringParser(const std::string str)
 
 void ServerClient::list(std::vector<std::string>)
 {
-    std::ofstream out;
-    std::ifstream in;
+#if have_filesystem == 1
+    /**
+     * If header: <filesystem> is defined
+     */
+    for(const auto &name : fs::directory_iterator(this->dir))
+    {
+        std::cout << name.path() << std::endl;
+    }
+#else
+    /**
+     * If header: <filesystem> is not defined
+     */
+#   ifdef WINDOWS
+    /**
+     * Call Windows APIs
+     */
+    HANDLE cur_dir;
+    WIN32_FIND_DATA file_data;
+    if ((cur_dir = FindFirstFile((this->dir + "/*").c_str(), &file_data)) == INVALID_HANDLE_VALUE)
+    {
+        std::cout << "Find files error. Plantform: Windows" << std::endl;
+    }
+    do
+    {
+        const std::string file_name = file_data.cFileName;
+        const std::string full_file_name = this->dir + "/" + file_name;
+        const bool is_directory = (file_data.dwFileAttributes & FILE_ATTRIBUTES_DIRECTORY) != 0;
+
+        if (file_name[0] == '.')
+            continue;
+        if (is_directory)
+            continue;
+
+        std::cout << full_file_name << std::endl;
+    } while (FindNextFile(cur_dir, &file_data))
+    FindClose(cur_dir)
+#   else
+    /**
+     * Call POSIX APIs
+     */
+    DIR *cur_dir;
+    struct dirent *ent;
+    if ((dir = opendir (this->dir)) != nullptr)
+    {
+        while((ent = readdir(dir)) != nullptr)
+        {
+            std::cout << ent->d_name << std::endl;
+        }
+        closedir(dir);
+    }
+    else
+    {
+        perror("Cannot open this dir");
+    }
+#   endif
+#endif
 }
 
 void ServerClient::pwd()
 {
+#if have_filesystem == 1
     std::cout << this->dir.string() << std::endl;
+#else
+    /**
+     * If your CPP version does not support <filesystem>
+     */
+    std::cout << this->dir << std::endl;
+#endif
 }
