@@ -1,6 +1,6 @@
 #pragma once
 #ifndef __SERVERCLIENT_HPP__
-#define __SERVERCLIENT_HPP__
+#define __SERVERCLIENT_HPP__ 1
 #include "ServerInterface.hpp"
 #include "ServerFuncInterface.hpp"
 
@@ -50,9 +50,13 @@ private:
 #endif
     static socklen_t socklen;
 public:
+    static int MainThreadsCount;
+    static int TransThreadCount;
+
     ServerClient();
     ServerClient(struct sockaddr* addr, int ID);
     ~ServerClient();
+
     //bool CreateSocket(int sockfd, struct sockaddr* addr);
     bool CreateSocket();
     bool isAlive();

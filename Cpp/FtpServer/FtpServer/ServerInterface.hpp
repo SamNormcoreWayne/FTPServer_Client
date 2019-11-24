@@ -1,6 +1,6 @@
 #pragma once
 #ifndef __SERVERINTERFACE_HPP__
-#define __SERVERINTERFACE_HPP__
+#define __SERVERINTERFACE_HPP__ 1
 
 #include <iostream>
 #include <sys/socket.h>

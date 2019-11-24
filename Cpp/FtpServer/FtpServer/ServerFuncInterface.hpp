@@ -1,6 +1,6 @@
 #pragma once
 #ifndef __SERVERFUNCINTERFACE_HPP__
-#define __SERVERFUNCINTERFACE_HPP__
+#define __SERVERFUNCINTERFACE_HPP__ 1
 
 #include <vector>
 #include <string>

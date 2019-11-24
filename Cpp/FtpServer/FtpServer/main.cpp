@@ -20,10 +20,9 @@ int main(int argc, char *argv[]){
      * 3. --port
      * 4. --ID
      */
-    enum parm_t {ip, port, ID};
+    enum parm_t {host, ip, port, ID};
     int server_sockfd;
     int clint_sockfd;
-
     /*
      * TODO: Implement legalIP(), legalPort(), legalIP();
      */
@@ -78,7 +77,9 @@ int main(int argc, char *argv[]){
      * Concurrency required in future.
      * Multi-thread -> Thread pool -> Multiplexing(epoll, reactor)
      */
-    ServerInterface* server = new ServerClient((struct sockaddr *)&servAddr, serverID);
+    ServerClient* server = new ServerClient((struct sockaddr *)&servAddr, serverID);
+    ServerClient::MainThreadsCount = 0;
+    ServerClient::TransThreadCount = 0;
     /*
      * TODO: Single thread solution
      */
@@ -92,7 +93,16 @@ int main(int argc, char *argv[]){
         std::thread thread_obj(server->ServerMain);
         if (thread_obj.joinable())
             thread_obj.detach();
+        /*
+         * TODO: Implement threads handling every function in ServerMain();
+         */
+        ServerClient::MainThreadsCount++;
+        ServerClient::TransThreadCount++;
+        /*
+         * Consider carefully about vars lifecyclie
+         */
     }
-
+    while(ServerClient::MainThreadsCount != 0 && ServerClient::TransThreadCount != 0)
+        ;
     return 0;
 }
