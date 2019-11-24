@@ -1,8 +1,10 @@
 #include <iostream>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+#ifdef __linux__
+#   include <sys/socket.h>
+#   include <sys/types.h>
+#   include <netinet/in.h>
+#   include <arpa/inet.h>
+#endif
 #include <thread>
 #include "ServerInterface.hpp"
 #include "ServerClient.hpp"
@@ -59,7 +61,7 @@ int main(int argc, char *argv[]){
         {
             if (legalID(argv[i + 1]))
             {
-                serverID = argv[i + 1];
+                serverID = std::stoi(argv[i + 1]);
             }
             else
             {
@@ -67,7 +69,11 @@ int main(int argc, char *argv[]){
                 exit(-1);
             }
         }
+        /*
+         * Let us see what are goona be with using stoi and atoi
+         */
     }
+
     /**
      * Concurrency required in future.
      * Multi-thread -> Thread pool -> Multiplexing(epoll, reactor)
@@ -84,6 +90,8 @@ int main(int argc, char *argv[]){
          * Deal with requests.
          */
         std::thread thread_obj(server->ServerMain);
+        if (thread_obj.joinable())
+            thread_obj.detach();
     }
 
     return 0;
