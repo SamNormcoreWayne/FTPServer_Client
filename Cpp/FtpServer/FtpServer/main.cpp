@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
@@ -7,6 +8,10 @@
 #include "ServerClient.hpp"
 
 using namespace std;
+
+bool legalIP(char*);
+bool legalPort(char*);
+bool legalID(char*);
 
 int main(int argc, char *argv[]){
     return 0;
@@ -58,11 +63,11 @@ int main(int argc, char *argv[]){
         {
             if (legalID(argv[i + 1]))
             {
-                serverID = argv[i + 1];
+                serverID = atoi(argv[i + 1]);
             }
             else
             {
-                cout << "Illegal ID number!" << endl;
+                cout << "Illegal ID number! ID number shall be between 0 to 9999" << endl;
                 exit(-1);
             }
         }
@@ -86,4 +91,39 @@ int main(int argc, char *argv[]){
     }
 
     return 0;
+}
+
+bool legalIP(char* str)
+{
+    struct sockaddr_in tmp;
+    int ans = inet_pton(AF_INET, str, &(tmp));
+    if (ans <= 0)
+        return false;
+    return true;
+}
+
+bool legalPort(char *str)
+{
+    int tmp = atoi(str);
+    if (!isdigit(tmp))
+    {
+        return false;
+    }
+    if (tmp > 65535 || tmp < 1)
+        return false;
+    return true;
+}
+
+bool legalID(char *str)
+{
+    int tmp = atoi(str);
+    if (!isdigit(tmp))
+    {
+        return false;
+    }
+    if (tmp > 9999 || tmp < 0)
+    {
+        return false;
+    }
+    return true;
 }
