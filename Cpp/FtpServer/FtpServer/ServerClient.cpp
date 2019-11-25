@@ -38,6 +38,10 @@ ServerClient::~ServerClient()
 //    return this->CreateSocket();
 //}
 
+void ServerClient::operator() () {
+    this->ServerMain();
+}
+
 bool ServerClient::CreateSocket()
 {
     if ((this->socket_fd = socket(PF_INET, SOCK_STREAM, 0)) < 0)

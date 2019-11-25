@@ -1,8 +1,11 @@
 #include <iostream>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+#ifdef __linux__
+#   include <sys/socket.h>
+#   include <sys/types.h>
+#   include <netinet/in.h>
+#   include <arpa/inet.h>
+#endif
+#include <thread>
 #include "ServerInterface.hpp"
 #include "ServerClient.hpp"
 
@@ -17,10 +20,9 @@ int main(int argc, char *argv[]){
      * 3. --port
      * 4. --ID
      */
-    enum parm_t {ip, port, ID};
+    enum parm_t {host, ip, port, ID};
     int server_sockfd;
     int clint_sockfd;
-
     /*
      * TODO: Implement legalIP(), legalPort(), legalIP();
      */
@@ -58,7 +60,7 @@ int main(int argc, char *argv[]){
         {
             if (legalID(argv[i + 1]))
             {
-                serverID = argv[i + 1];
+                serverID = std::stoi(argv[i + 1]);
             }
             else
             {
@@ -66,12 +68,18 @@ int main(int argc, char *argv[]){
                 exit(-1);
             }
         }
+        /*
+         * Let us see what are goona be with using stoi and atoi
+         */
     }
+
     /**
      * Concurrency required in future.
      * Multi-thread -> Thread pool -> Multiplexing(epoll, reactor)
      */
-    ServerInterface* server = new ServerClient((struct sockaddr *)&servAddr, serverID);
+    ServerClient* server = new ServerClient((struct sockaddr *)&servAddr, serverID);
+    ServerClient::MainThreadsCount = 0;
+    ServerClient::TransThreadCount = 0;
     /*
      * TODO: Single thread solution
      */
@@ -82,8 +90,19 @@ int main(int argc, char *argv[]){
         /**
          * Deal with requests.
          */
-        server->ServerMain();
+        std::thread thread_obj(server->ServerMain);
+        if (thread_obj.joinable())
+            thread_obj.detach();
+        /*
+         * TODO: Implement threads handling every function in ServerMain();
+         */
+        ServerClient::MainThreadsCount++;
+        ServerClient::TransThreadCount++;
+        /*
+         * Consider carefully about vars lifecyclie
+         */
     }
-
+    while(ServerClient::MainThreadsCount != 0 && ServerClient::TransThreadCount != 0)
+        ;
     return 0;
 }
