@@ -265,8 +265,5 @@ __pycache__/
 **/.classpath
 
 # Visual Studio
-**/*.sln
-**/*.vcxproj
-**/*.vcxproj.user
 **/readme
 **/*.vcxproj.filters
