@@ -1,3 +1,4 @@
+#include <fstream>
 #include "ServerClient.hpp"
 
 constexpr auto LOCAL_HOST = "127.0.0.1";
@@ -10,7 +11,13 @@ ServerClient::ServerClient()
      * PORT: 8000
      */
     struct sockaddr_in def;
+    /*
+     * Socket struct
+     */
     def.sin_family = AF_INET;
+    /*
+     * AF_INET/AP_INET
+     */
     def.sin_addr.s_addr = inet_addr(LOCAL_HOST);
     def.sin_port = htons(8000);
     this->addr = (struct sockaddr *)&def;
@@ -65,6 +72,7 @@ bool ServerClient::Bind()
     }
     return true;
 }
+
 bool ServerClient::Listen()
 {
     if (listen(this->socket_fd, 5) < 0)
@@ -82,6 +90,7 @@ int ServerClient::Accept()
     {
         return -1;
     }
+    this->client_fd = client_fd;
     return client_fd;
 }
 
@@ -267,4 +276,27 @@ void ServerClient::pwd()
      */
     std::cout << this->dir << std::endl;
 #endif
+}
+
+void ServerClient::get(std::vector<std::string> files)
+{
+    int client_fd = this->client_fd;
+    int byte = 0;
+    char recv_data[100];
+    char send_buff[100];
+    /*
+     * Let's see if std::string is proper here.
+     * Actually I would prefer char[]
+     */
+    if ((byte = recv(client_fd, recv_data, 100, 0)) == -1)
+    {
+        perror("Receiving data from frontend");
+        this->Exit();
+    }
+    std::cout << "Msg from client: " << recv_data << std::endl;
+    std::ifstream file(recv_data);
+    if (!file.fail())
+    {
+        
+    }
 }

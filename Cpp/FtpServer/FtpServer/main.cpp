@@ -80,20 +80,20 @@ int main(int argc, char *argv[]){
     ServerClient* server = new ServerClient((struct sockaddr *)&servAddr, serverID);
     ServerClient::MainThreadsCount = 0;
     ServerClient::TransThreadCount = 0;
-    /*
+    /**
      * TODO: Single thread solution
      */
     server->Listen();
     while (server->isAlive() == true)
     {
         server->Accept();
-        /**
+        /*
          * Deal with requests.
          */
         std::thread thread_obj(server->ServerMain);
         if (thread_obj.joinable())
             thread_obj.detach();
-        /*
+        /**
          * TODO: Implement threads handling every function in ServerMain();
          */
         ServerClient::MainThreadsCount++;
