@@ -36,6 +36,10 @@ private:
     struct sockaddr* addr;
     bool alive = false;
     int socket_fd;
+    /*
+     * socket_fd: server socket fd
+     */
+    int client_fd;
     int ID = 1;
     std::string mode = "";
 #if have_filesystem == 1
